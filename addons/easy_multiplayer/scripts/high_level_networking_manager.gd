@@ -11,6 +11,10 @@ signal updated_peer_count
 @export var port : int = 61679
 @export var max_network_peers: int = 10 # Max number of CLIENTS allowed on the server.
 @export var compression_method: ENetConnection.CompressionMode = ENetConnection.COMPRESS_RANGE_CODER
+@export var accepts_incoming_connections: bool = true:
+	set(new_accepts_connections_state):
+		accepts_incoming_connections = new_accepts_connections_state
+		peer.refuse_new_connections = !accepts_incoming_connections
 
 enum PeerType {
 	UNINITIALIZED = -1,
@@ -62,6 +66,7 @@ func _on_peer_disconnected(id: int) -> void:
 ## This gets called on clients only
 func _on_peer_connected_to_server() -> void:
 	print("Peer connected to server!")
+	#print(str(multiplayer.get_unique_id()))
 	on_peer_connected_to_server.emit()
 
 ## Function called when a peer connection fails.[br]
@@ -122,7 +127,7 @@ func get_current_player_count() -> int:
 	else:
 		# Client: Return the ASYNCHRONOUS count received from the server
 		# current_connected_peers is the number of other peers (clients + host)
-		return current_connected_peers + 1 
+		return current_connected_peers + 1
 		
 ## Function for the maximum number of TOTAL PLAYERS (Clients + Host)
 func get_max_player_count() -> int:

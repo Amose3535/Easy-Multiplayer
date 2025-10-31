@@ -47,9 +47,14 @@ func _on_client_pressed() -> void:
 
 ## Starts the game
 func _on_start_game_pressed() -> void:
+	HighLevelNetworking.accepts_incoming_connections = false
 	start_game_button.disabled = true
+	var start_game_tween : Tween = get_tree().create_tween()
+	start_game_tween.set_ease(Tween.EASE_IN)
+	start_game_tween.tween_property(start_game_button,"custom_minimum_size:x",0,0.3)
+	await start_game_tween.finished
+	start_game_button.hide()
 	print("Starting game")
-	# et cetera
 
 ## Disables buttons to prevent double presses
 func disable_connect_buttons() -> void:

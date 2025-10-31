@@ -15,6 +15,33 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_opvvu")
 
+[node name="BG" type="CanvasLayer" parent="."]
+layer = -1000
+
+[node name="BGColor" type="ColorRect" parent="BG"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.078431375, 0.27058825, 0.77254903, 1)
+
+[node name="BGScroll" type="ColorRect" parent="BG"]
+material = ExtResource("4_hmhc3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BGOverColor" type="ColorRect" parent="BG"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 1, 0.6509804)
+
 [node name="Tooltip" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 7
@@ -106,33 +133,6 @@ icon = ExtResource("4_lef7s")
 alignment = 0
 clip_text = true
 expand_icon = true
-
-[node name="BG" type="CanvasLayer" parent="."]
-layer = -1000
-
-[node name="BGColor" type="ColorRect" parent="BG"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.078431375, 0.27058825, 0.77254903, 1)
-
-[node name="BGScroll" type="ColorRect" parent="BG"]
-material = ExtResource("4_hmhc3")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="BGOverColor" type="ColorRect" parent="BG"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 1, 0.6509804)
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/VBoxContainer/Server" to="." method="_on_server_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/VBoxContainer/Client" to="." method="_on_client_pressed"]

@@ -47,6 +47,7 @@ func _on_client_pressed() -> void:
 
 ## Starts the game
 func _on_start_game_pressed() -> void:
+	start_game_button.disabled = true
 	print("Starting game")
 	# et cetera
 

@@ -97,7 +97,7 @@ func start_client() -> void:
 	type = PeerType.CLIENT
 
 
-## SERVER ONLY: Calculates the current client count and notifies all peers.
+## SERVER ONLY: Calculates the current client count and notifies all peers to update their values.
 func _update_and_notify_peer_count():
 	# 1. Calculate the number of connected CLIENTS (peers, excluding host)
 	var peer_count : int = multiplayer.get_peers().size()

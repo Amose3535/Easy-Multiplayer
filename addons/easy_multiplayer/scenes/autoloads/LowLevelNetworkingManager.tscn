@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://coakiewhxlvsj"]
+
+[ext_resource type="Script" uid="uid://vxq52ysdk0ub" path="res://addons/easy_multiplayer/scripts/low_level_networking_manager.gd" id="1_p8ewh"]
+
+[node name="LowLevelNetworking" type="Node"]
+script = ExtResource("1_p8ewh")

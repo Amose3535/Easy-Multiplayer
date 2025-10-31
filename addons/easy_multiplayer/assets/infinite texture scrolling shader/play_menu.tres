@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dax664tygfkf1"]
+
+[ext_resource type="Shader" uid="uid://bnoqgb8xd8pcn" path="res://addons/easy_multiplayer/assets/infinite texture scrolling shader/infinite_scrolling.gdshader" id="1_4amkl"]
+[ext_resource type="Texture2D" uid="uid://bc8cy230hxch8" path="res://addons/easy_multiplayer/assets/icons/select_checkbox_rotatedpng.png" id="2_pfbnc"]
+
+[resource]
+shader = ExtResource("1_4amkl")
+shader_parameter/scroll_speed = 0.02000000095
+shader_parameter/angle_degrees = 45.0
+shader_parameter/repeat_x = 20.0
+shader_parameter/repeat_y = 12.0
+shader_parameter/row_offset = 1.0
+shader_parameter/texture_to_scroll = ExtResource("2_pfbnc")

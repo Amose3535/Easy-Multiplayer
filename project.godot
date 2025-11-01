@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Easy multiplayer Addon"
+run/main_scene="uid://d14wupjeyiw7n"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -18,6 +19,11 @@ config/icon="res://icon.svg"
 
 HighLevelNetworking="*res://addons/easy_multiplayer/scenes/autoloads/HighLevelNetworkingManager.tscn"
 LowLevelNetworking="*res://addons/easy_multiplayer/scenes/autoloads/LowLevelNetworkingManager.tscn"
+
+[display]
+
+window/size/viewport_width=856
+window/size/viewport_height=482
 
 [editor_plugins]
 

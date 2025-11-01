@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://n34yyvgj7ecn"]
+
+[node name="LevelWorld" type="Node2D"]
+
+[node name="Sprite2D" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1584.0
+offset_top = -911.0
+offset_right = -1488.0
+offset_bottom = -855.78784
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(33, 32.99999)
+color = Color(0.5019608, 0.56078434, 0.65882355, 1)

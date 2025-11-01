@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://coi8bwvrghj0y"]
+
+[ext_resource type="Shader" uid="uid://b1sg0udwvsk2b" path="res://addons/easy_multiplayer/assets/outline shader/outline_shader.gdshader" id="1_r4wm7"]
+
+[resource]
+shader = ExtResource("1_r4wm7")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/width = 1.0000000475
+shader_parameter/pattern = 0
+shader_parameter/inside = false
+shader_parameter/add_margins = true

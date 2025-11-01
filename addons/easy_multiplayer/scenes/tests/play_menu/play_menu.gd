@@ -1,37 +1,49 @@
 extends Control
 
-@onready var server_button: Button = $PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/VBoxContainer/Server
-@onready var client_button: Button = $PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/VBoxContainer/Client
-@onready var start_game_button: Button = $PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/StartGame
-@onready var buttons_container: VBoxContainer = $PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/CenterContainer/HBoxContainer/VBoxContainer
+signal start_requested
+
+@onready var server_button: Button = %Server
+@onready var client_button: Button = %Client
+@onready var start_game_button: Button = %StartGame
+@onready var buttons_container: VBoxContainer = %ConnectionButtons
+@onready var ip_line_edit: LineEdit = %IP
 @onready var tooltip: Label = $Tooltip
 
 var hint_text: String
+var ip_address: String = "":
+	## Only get ip_line_edit.text if ip_address is empty
+	get:
+		if ip_address == "":
+			ip_address = ip_line_edit.text
+		return ip_address
+	set(new_ip):
+		ip_address = new_ip
 
 func _ready() -> void:
-	HighLevelNetworking.updated_peer_count.connect(_update_tooltip_display)
-	HighLevelNetworking.on_peer_connected_to_server.connect(_update_tooltip_display)
-	_update_tooltip_display()
-	
+	HighLevelNetworking.updated_peer_count.connect(_update_tooltip_display) # Peer count changed
+	HighLevelNetworking.on_peer_connected_to_server.connect(_update_tooltip_display) # Peer connected to server (client side)
 	HighLevelNetworking.on_peer_connected.connect(_on_peer_connected)
 	HighLevelNetworking.on_peer_disconnected.connect(_on_peer_disconnected)
 	HighLevelNetworking.on_peer_connected_to_server.connect(_on_peer_connected_to_server)
 	HighLevelNetworking.on_peer_connection_failed.connect(_on_peer_connection_failed)
+	_update_tooltip_display()
 
 #region Peer connections
 
 func _on_peer_connected(id: int) -> void:
-	# Update 
-	pass
+	_notify("[Peer connected]","Peer connected with id {id}".format({"id":id}))
 
 func _on_peer_disconnected(id: int) -> void:
-	pass
+	_notify("[Peer disconnected]","Peer disconnected with id {id}".format({"id":id}))
 
 func _on_peer_connected_to_server() -> void:
-	pass
+	_notify("[Connection successful!]","Successfully connected to server")
 
 func _on_peer_connection_failed() -> void:
-	pass
+	_notify("[Connection failed!]","Couldn't connect to server")
+	# If the connection fails, then re enable buttons and reset network stats
+	enable_connect_buttons()
+	HighLevelNetworking._reset_network_state()
 #endregion
 
 ## Creates a server and awaits for incoming connections
@@ -42,6 +54,9 @@ func _on_server_pressed() -> void:
 
 ## Creates a client connects to the server
 func _on_client_pressed() -> void:
+	if !ip_address.is_valid_ip_address() && (ip_address != "localhost"):
+		OS.alert("The provided IP is not a valid IP address. Make sure to insert a correct one and retry.","WRONG IP")
+		return
 	disable_connect_buttons()
 	HighLevelNetworking.start_client()
 
@@ -55,6 +70,7 @@ func _on_start_game_pressed() -> void:
 	await start_game_tween.finished
 	start_game_button.hide()
 	print("Starting game")
+	start_requested.emit()
 
 ## Disables buttons to prevent double presses
 func disable_connect_buttons() -> void:
@@ -65,6 +81,16 @@ func disable_connect_buttons() -> void:
 	buttons_tween.tween_property(buttons_container,"custom_minimum_size:x",0,0.3)
 	await buttons_tween.finished
 	buttons_container.hide()
+
+## Opposite of disable_connect_buttons
+func enable_connect_buttons() -> void:
+	buttons_container.show()
+	server_button.disabled = false
+	client_button.disabled = false
+	var buttons_tween : Tween = get_tree().create_tween()
+	buttons_tween.set_ease(Tween.EASE_IN)
+	buttons_tween.tween_property(buttons_container,"custom_minimum_size:x",400.0,0.3)
+	await buttons_tween.finished
 
 ## Shows start game button through animation
 func show_start_game() -> void:
@@ -98,3 +124,17 @@ func _update_tooltip_display() -> void:
 		action_text = ""
 	
 	tooltip.text = status_text + "\n" + action_text
+
+## Called when the ip line edit 's text changes. it sets the ip_address to the new text if it's a valid address and then clone the copy onto HighLevelNetworking.ip_address
+func _on_line_edit_text_changed(new_text: String) -> void:
+	ip_address = new_text if new_text.is_valid_ip_address() || new_text == "localhost" else ""
+	HighLevelNetworking.ip_address = ip_address # gets set to "" or to new_text depending on the output
+
+
+func _notify(title: String, body: String):
+	if get_tree().root.has_node("/root/NotificationEngine"):
+		var notification_ref := get_tree().root.get_node("/root/NotificationEngine")
+		if notification_ref.has_method(&"notify"):
+			notification_ref.notify({"title":title,"body":body})
+	else:
+		print(title," ",body)

@@ -16,9 +16,14 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:player_id")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+properties/3/path = NodePath(".:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="ExamplePlayer" type="CharacterBody2D"]
 script = ExtResource("1_xwr8q")
+player_id = null
+enabled = null
 metadata/_custom_type_script = "uid://ck1f743qilq7b"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -26,6 +31,7 @@ shape = SubResource("RectangleShape2D_xwr8q")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 3
+rotation = 1.5707964
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("1_nee6b")
 

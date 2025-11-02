@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://n34yyvgj7ecn"]
+[gd_scene load_steps=2 format=3 uid="uid://n34yyvgj7ecn"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_8e2p1"]
 
 [node name="LevelWorld" type="Node2D"]
 
@@ -14,3 +16,8 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(33, 32.99999)
 color = Color(0.5019608, 0.56078434, 0.65882355, 1)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_8e2p1")

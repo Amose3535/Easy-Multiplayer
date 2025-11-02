@@ -23,6 +23,7 @@ enum SpawnMode {
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_spawn_player)
+	multiplayer.peer_disconnected.connect(_despawn_player)
 
 # Executed on clients and servers
 func _spawn_player(id: int) -> void:
@@ -40,4 +41,6 @@ func _spawn_player(id: int) -> void:
 
 
 func _despawn_player(id: int) -> void:
-	pass
+	for player in get_node(spawn_path).get_children():
+		if player is MultiplayerCharacterBody2D && player.player_id == id:
+			player.queue_free()

@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://crmbt567xnyir"]
+
+[ext_resource type="Script" uid="uid://b2ghenihs6opa" path="res://addons/easy_multiplayer/scripts/messenger.gd" id="1_uvpw8"]
+
+[node name="Messenger" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uvpw8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ChatLog" type="RichTextLabel" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=red]Amose[/color]: Ciao!
+Lorenzo: Ciao!"
+scroll_active = false
+scroll_following = true
+
+[node name="SendMessage" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Press ENTER to send."
+editable = false

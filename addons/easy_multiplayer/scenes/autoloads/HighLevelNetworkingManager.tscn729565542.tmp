@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://rkfeojr5dgys"]
+
+[ext_resource type="Script" uid="uid://cr2j046evom5b" path="res://addons/easy_multiplayer/scripts/high_level_networking_manager.gd" id="1_b3ppg"]
+
+[node name="HighLevelNetworking" type="Node"]
+script = ExtResource("1_b3ppg")

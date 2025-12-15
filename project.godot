@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 HighLevelNetworking="*res://addons/easy_multiplayer/scenes/autoloads/HighLevelNetworkingManager.tscn"
-LowLevelNetworking="*res://addons/easy_multiplayer/scenes/autoloads/LowLevelNetworkingManager.tscn"
 
 [display]
 

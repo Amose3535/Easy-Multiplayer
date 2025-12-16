@@ -6,8 +6,8 @@ extends Node
 @onready var play_menu: Control = $PlayMenu
 
 func _ready() -> void:
-	if play_menu.has_signal(&"start_requested"): play_menu.start_requested.connect(_on_start_requested)
-	
+	#if play_menu.has_signal(&"start_requested"): play_menu.start_requested.connect(_on_start_requested)
+	pass
 
 func _on_start_requested() -> void:
 	start_game.rpc()

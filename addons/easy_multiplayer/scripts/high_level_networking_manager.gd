@@ -3,12 +3,19 @@ extends Node
 
 ## Emitted when a peer connects
 signal on_peer_connected(id: int)
-## Emitted when a peer disconnects
+## Emitted when a peer disconnects (BEFORE the next signal, hence before [code]player_dict[/code] is updated)
+signal on_peer_disconnection(ip: int)
+## Emitted right after a peer disconnects
 signal on_peer_disconnected(id: int)
+## Emitted on a client when it connects to a server
 signal on_peer_connected_to_server
+## Emitted when a connection to another peer fails to go through
 signal on_peer_connection_failed
+## Emitted when a session ends and everything is reset to its original state
+signal session_ended
 ## Updated when the player_dict list changes.
 signal updated_peer_list
+
 
 
 
@@ -92,16 +99,21 @@ func _on_peer_connected(id: int) -> void:
 ## Function called when a peer disconnects from the network.[br]
 ## This gets called on servers and clients
 func _on_peer_disconnected(id: int) -> void:
+	on_peer_disconnection.emit(id)
 	if debug: print("Player disconnected. Peer id: {id}".format({"id":id}))
 	
 	# Only the server must broadcast the new count
 	if multiplayer.is_server():
 		player_dict.erase(id)
-		print("Ereased %d. Now: %s"%[id, str(player_dict)])
+		if debug: print("Ereased %d. Now: %s"%[id, str(player_dict)])
 		_update_and_notify_players_list()
 	
 	
 	on_peer_disconnected.emit(id)
+	
+	
+	if multiplayer.get_unique_id() == id:
+		end_session()
 	
 	if id == SERVER_ID : # if the id of the disconnected peer is 1 (server), end session and reset everything
 		end_session()
@@ -207,6 +219,7 @@ func end_session() -> void:
 			
 		# 3. Server resets itself.
 		reset_network_state()
+	session_ended.emit()
 #endregion Network management
 
 
@@ -218,7 +231,7 @@ func end_session() -> void:
 ## SERVER ONLY: Calculates the current client count and notifies all peers to update their values.
 func _update_and_notify_players_list():
 	if !multiplayer.is_server(): return # Ensures this runs on the SERVER ONLY
-	print("Server requires player names")
+	if debug: print("Server requires player names")
 	# Asks the peers to answer with their names
 	_get_client_nick.rpc()
 
@@ -227,7 +240,7 @@ func _update_and_notify_players_list():
 ## RPC function that runs on CLIENTS ONLY, used to answer the server to recieve this peer's nickname
 func _get_client_nick() -> void:
 	if multiplayer.is_server(): return # Ensures this runs on CLIENTS ONLY
-	print("Client %d answers with %s"%[multiplayer.get_unique_id(), player_nickname])
+	if debug: print("Client %d answers with %s"%[multiplayer.get_unique_id(), player_nickname])
 	# Call on the server (id 1) the rpc "_recieve_nickname" with the provided nickname
 	_recieve_nickname.rpc_id(SERVER_ID, player_nickname)
 
@@ -238,7 +251,7 @@ func _recieve_nickname(nickname:String) -> void:
 	if !multiplayer.is_server(): return # Ensures this runs on the SERVER ONLY
 	var sender: int = multiplayer.get_remote_sender_id()
 	if sender == SERVER_ID: return
-	print("Server recieved the nickname from %d: %s"%[sender, nickname])
+	if debug: print("Server recieved the nickname from %d: %s"%[sender, nickname])
 	var current_players: Dictionary[int, String] = player_dict.duplicate()
 	
 	## Check for multiple occurrences of the same name ( unused ) 
@@ -253,7 +266,7 @@ func _recieve_nickname(nickname:String) -> void:
 	current_players[sender] = nickname
 	#if player_dict != current_players: # Change dict and call rpc only when necessary
 	player_dict = current_players # This triggers the setter
-	print("Calling rpc")
+	if debug: print("Calling rpc")
 	sync_player_dict.rpc(current_players)
 
 
@@ -263,7 +276,7 @@ func sync_player_dict(new_players: Dictionary[int, String]) -> void:
 	if multiplayer.is_server(): return # Ensures this runs on CLIENTS ONLY
 	if multiplayer.get_remote_sender_id() != SERVER_ID: return# Ensures that ONLY if the server has sent the new list, the peer will accept it.
 	player_dict = new_players # Applies the recieved, server-issued player_dict
-	print("Client %d recieved notification from server to update its player list copy. Now: %s"%[multiplayer.get_unique_id(),str(new_players)])
+	if debug: print("Client %d recieved notification from server to update its player list copy. Now: %s"%[multiplayer.get_unique_id(),str(new_players)])
 	
 #endregion Nickname Handshake
 
@@ -275,9 +288,12 @@ func sync_player_dict(new_players: Dictionary[int, String]) -> void:
 #region Network Utilities
 ## Returns the player count, using the local copy of the server-issued player list
 func get_current_player_count() -> int:
-	print("Player list: %s"%str(player_dict))
-	print("Player list size: %d"%player_dict.size())
+	if debug: print("Player list: %s"%str(player_dict))
+	if debug: print("Player list size: %d"%player_dict.size())
 	return player_dict.size()
+
+func get_nickname(from_id: int) -> String:
+	return player_dict.get(from_id,null)
 
 func get_max_player_count() -> int:
 	return max_network_peers

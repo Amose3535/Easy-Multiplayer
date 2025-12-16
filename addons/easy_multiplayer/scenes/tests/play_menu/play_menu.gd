@@ -58,7 +58,7 @@ func _on_peer_connection_failed() -> void:
 	if debug: _notify("[Connection failed!]","Couldn't connect to server")
 	# If the connection fails, then re enable buttons and reset network stats
 	enable_connect_buttons()
-	HighLevelNetworking._reset_network_state()
+	HighLevelNetworking.reset_network_state()
 #endregion
 
 ## Creates a server and awaits for incoming connections
